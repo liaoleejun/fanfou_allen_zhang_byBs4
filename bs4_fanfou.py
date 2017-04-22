@@ -12,8 +12,8 @@ cj = cookielib.MozillaCookieJar(filename)
 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 opener.open(fanfou)
 postdata = urllib.urlencode({
-    'loginname': 'wqsaxz@wqsaxz.com',
-    'loginpass': 'wqsaxz',
+    'loginname': 'liaoleejun@163.com',
+    'loginpass': 'wikijun123',
     'action': 'login',
     'token': '12345678'
 })
@@ -27,9 +27,8 @@ for i in range(1, 119):
     soup = BeautifulSoup(content)
     content = soup.find_all("span", class_="content")
     for elem in content:
-        res = res + str(elem)+'<br>'
-    res = res + '<br>'
-    res = res + '<br>'
+        res = res + str(elem)+'<br><br>'
+    res += '<br><br><br>'
     print i
 
 fp = open("fanfou.html", "w")
