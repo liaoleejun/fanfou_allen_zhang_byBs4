@@ -19,8 +19,8 @@ cookie = cookielib.MozillaCookieJar(filename)
 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
 opener.open(url)
 data = urllib.urlencode({
-    "loginname": "liaoleejun@163.com",
-    "loginpass": "wikijun123",
+    "loginname":"wqsaxz@wqsaxz.com",
+    "loginpass":"wqsaxz",
     "action": "login",
     "token": "12345678"
 })
@@ -38,11 +38,13 @@ for i in range(1, 119):
     content = result.read()
     soup = BeautifulSoup(content)
     text = soup.find_all("span", class_="content")
-    for elem in text:
-        res = res + str(elem) + '<br><br>'
-    res += '<br><br><br>'
-    print i
+    time = soup.find_all("a", class_="time")
 
-fp = open("fanfou2.html", "w")
+    for j in range(len(text)):
+        res = res + str(time[j]) + ' ' + str(text[j]) + '<br><br>'
+    res += '<hr>'
+    print str(i) + 'th page'
+
+fp = open("fanfou.html", "w")
 fp.write(res)
 fp.close()

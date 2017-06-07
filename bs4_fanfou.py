@@ -3,9 +3,6 @@ import urllib2
 import cookielib
 from bs4 import BeautifulSoup
 
-import sys
-reload(sys)
-
 filename = 'cookie.txt'
 fanfou = 'http://fanfou.com/'
 cj = cookielib.MozillaCookieJar(filename)
