@@ -1,50 +1,42 @@
-# coding=utf-8
+# coding: utf-8
 
-"""
-参考自:
-1. http://cuiqingcai.com/968.html
-2. liuwei
-"""
+# Python 3, requests版本 (因为Python 2在2020年会退休不再维护; 同时, 大家都在推荐
+# 用requests库, 而不是urllib)
+# 需要: 导入requests和bs4库 (是bs4而不是BeautifulSoup)
 
-import urllib
-import urllib2
-import cookielib
+import requests
 from bs4 import BeautifulSoup
 
-filename = 'cookie.txt'
-url = 'http://www.fanfou.com'
-
-# 声明一个MozillaCookieJar对象实例来保存cookie，之后写入文件
-cookie = cookielib.MozillaCookieJar(filename)
-opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
-opener.open(url)
-data = urllib.urlencode({
-    "loginname":"wqsaxz@wqsaxz.com",
-    "loginpass":"wqsaxz",
+login_url = 'http://fanfou.com/login'
+# payload是用Chrom监测登录的网络看到的, 其中用户名和密码是注册的,
+# Todo token取12345678也是可以的, 有待进一步探究 
+payload = {
+    "loginname": "wqsaxz@wqsaxz.com",
+    "loginpass": "wqsaxz",
     "action": "login",
     "token": "12345678"
-})
+}
 
-request = urllib2.Request('http://fanfou.com/login', data)
+with requests.Session() as s:
+    s.post(login_url, data=payload)
+    res = '<meta http-equiv="Content-Type" content="text/html; ' \
+          'charset=utf-8" />'
+    # 119是人工看到的网页总共有119页 (Todo 有待进一步优化, 来实现自动化)
+    for i in range(1, 119):
+        page_url = 'http://fanfou.com/~RLhcIDBjZAM/p.' + str(i)
+        content = s.get(page_url).text
+        # 带上第二个参数 "html.parser", 否则会报 warning
+        soup = BeautifulSoup(content, "html.parser")
+        text = soup.find_all("span", class_="content")
+        time = soup.find_all("a", class_="time")
 
-# 这个请求带了cookie，所以用urllib2.urlopen()方法是不行的，必须用opener.open() 方法
-# response = urllib2.urlopen(request)
-response = opener.open(request)
+        for j in range(len(text)):
+            res = res + str(time[j]) + ' ' + str(text[j]) + '<br><br>'
+        res += '<hr>'
+        print(str(i) + 'th page')
 
-res = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> '
-for i in range(1, 119):
-    pageURL = 'http://fanfou.com/~RLhcIDBjZAM/p.' + str(i)
-    result = opener.open(pageURL)
-    content = result.read()
-    soup = BeautifulSoup(content)
-    text = soup.find_all("span", class_="content")
-    time = soup.find_all("a", class_="time")
-
-    for j in range(len(text)):
-        res = res + str(time[j]) + ' ' + str(text[j]) + '<br><br>'
-    res += '<hr>'
-    print str(i) + 'th page'
-
-fp = open("fanfou.html", "w")
+# 必须加上encoding="utf-8"这个参数, 否则会乱码。
+# 大概是open函数默认调用系统的字符编码gbk
+fp = open("fanfou.html", "w", encoding="utf-8")
 fp.write(res)
 fp.close()
