@@ -17,6 +17,7 @@ payload = {
     "token": "12345678"
 }
 
+# 参考: https://stackoverflow.com/questions/11892729/how-to-log-in-to-a-website-using-pythons-requests-module/17633072#17633072
 with requests.Session() as s:
     s.post(login_url, data=payload)
     res = '<meta http-equiv="Content-Type" content="text/html; ' \
