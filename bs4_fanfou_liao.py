@@ -8,8 +8,8 @@ import requests
 from bs4 import BeautifulSoup
 
 login_url = 'http://fanfou.com/login'
-# payload是用Chrom监测登录的网络看到的, 其中用户名和密码是注册的,
-# Todo token取12345678也是可以的, 有待进一步探究 
+# payload是用Chrome监测登录的网络看到的, 其中用户名和密码是注册的
+# Todo token取12345678也是可以的, 有待进一步探究
 payload = {
     "loginname": "wqsaxz@wqsaxz.com",
     "loginpass": "wqsaxz",
@@ -17,7 +17,7 @@ payload = {
     "token": "12345678"
 }
 
-# 参考: https://stackoverflow.com/questions/11892729/how-to-log-in-to-a-website-using-pythons-requests-module/17633072#17633072
+# 参考: https://stackoverflow.com/a/17633072
 with requests.Session() as s:
     s.post(login_url, data=payload)
     res = '<meta http-equiv="Content-Type" content="text/html; ' \
